@@ -44,7 +44,9 @@ module OAuth::RequestProxy::Typhoeus
     def post_parameters
       # Post params are only used if posting form data
       if method == 'POST'
-        OAuth::Helper.stringify_keys(request.options[:params] || {})
+        h = OAuth::Helper.stringify_keys(request.options[:params] || {})
+        h.merge! OAuth::Helper.stringify_keys(request.options[:body] || {}) if request.options[:body].is_a?(Hash)
+        h
       else
         {}
       end
